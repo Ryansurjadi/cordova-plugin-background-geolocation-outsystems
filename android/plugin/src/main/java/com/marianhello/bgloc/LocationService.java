@@ -34,6 +34,11 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
+
 import com.marianhello.bgloc.data.BackgroundLocation;
 import com.marianhello.bgloc.data.ConfigurationDAO;
 import com.marianhello.bgloc.data.DAOFactory;
@@ -238,6 +243,8 @@ public class LocationService extends Service {
         provider = spf.getInstance(config.getLocationProvider());
 
         if (config.getStartForeground()) {
+            log.info("Build Version SDK INT", Build.VERSION.SDK_INT);
+            log.info("Build Version Codes o", Build.VERSION_CODES.O);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                 String NOTIFICATION_CHANNEL_ID = context.getPackageName();
                 String channelName = "My Background Service";
