@@ -274,7 +274,7 @@ public class LocationService extends Service {
                 }
 
                 // Add an onclick handler to the notification
-                Context context = getApplicationContext();
+                // Context context = getApplicationContext();
                 String packageName = context.getPackageName();
                 Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
