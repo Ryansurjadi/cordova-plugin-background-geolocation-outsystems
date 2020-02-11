@@ -238,33 +238,75 @@ public class LocationService extends Service {
         provider = spf.getInstance(config.getLocationProvider());
 
         if (config.getStartForeground()) {
-            // Build a Notification required for running service in foreground.
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-            builder.setContentTitle(config.getNotificationTitle());
-            builder.setContentText(config.getNotificationText());
-            if (config.getSmallNotificationIcon() != null) {
-                builder.setSmallIcon(getDrawableResource(config.getSmallNotificationIcon()));
-            } else {
-                builder.setSmallIcon(android.R.drawable.ic_menu_mylocation);
-            }
-            if (config.getLargeNotificationIcon() != null) {
-                builder.setLargeIcon(BitmapFactory.decodeResource(getApplication().getResources(), getDrawableResource(config.getLargeNotificationIcon())));
-            }
-            if (config.getNotificationIconColor() != null) {
-                builder.setColor(this.parseNotificationIconColor(config.getNotificationIconColor()));
-            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                String NOTIFICATION_CHANNEL_ID = context.getPackageName();
+                String channelName = "My Background Service";
+                NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+                chan.setLightColor(Color.BLUE);
+                chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                assert manager != null;
+                manager.createNotificationChannel(chan);
 
-            // Add an onclick handler to the notification
-            Context context = getApplicationContext();
-            String packageName = context.getPackageName();
-            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, launchIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.setContentIntent(contentIntent);
+                
+                // Build a Notification required for running service in foreground.
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+                builder.setContentTitle(config.getNotificationTitle());
+                builder.setContentText(config.getNotificationText());
+                if (config.getSmallNotificationIcon() != null) {
+                    builder.setSmallIcon(getDrawableResource(config.getSmallNotificationIcon()));
+                } else {
+                    builder.setSmallIcon(android.R.drawable.ic_menu_mylocation);
+                }
+                if (config.getLargeNotificationIcon() != null) {
+                    builder.setLargeIcon(BitmapFactory.decodeResource(getApplication().getResources(), getDrawableResource(config.getLargeNotificationIcon())));
+                }
+                if (config.getNotificationIconColor() != null) {
+                    builder.setColor(this.parseNotificationIconColor(config.getNotificationIconColor()));
+                }
 
-            Notification notification = builder.build();
-            notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_FOREGROUND_SERVICE | Notification.FLAG_NO_CLEAR;
-            startForeground(startId, notification);
+                // Add an onclick handler to the notification
+                Context context = getApplicationContext();
+                String packageName = context.getPackageName();
+                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, launchIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builder.setContentIntent(contentIntent);
+
+                Notification notification = builder.build();
+                notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_FOREGROUND_SERVICE | Notification.FLAG_NO_CLEAR;
+                startForeground(2, notification);
+                
+            }
+            else{
+                // Build a Notification required for running service in foreground.
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+                builder.setContentTitle(config.getNotificationTitle());
+                builder.setContentText(config.getNotificationText());
+                if (config.getSmallNotificationIcon() != null) {
+                    builder.setSmallIcon(getDrawableResource(config.getSmallNotificationIcon()));
+                } else {
+                    builder.setSmallIcon(android.R.drawable.ic_menu_mylocation);
+                }
+                if (config.getLargeNotificationIcon() != null) {
+                    builder.setLargeIcon(BitmapFactory.decodeResource(getApplication().getResources(), getDrawableResource(config.getLargeNotificationIcon())));
+                }
+                if (config.getNotificationIconColor() != null) {
+                    builder.setColor(this.parseNotificationIconColor(config.getNotificationIconColor()));
+                }
+
+                // Add an onclick handler to the notification
+                Context context = getApplicationContext();
+                String packageName = context.getPackageName();
+                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, launchIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builder.setContentIntent(contentIntent);
+
+                Notification notification = builder.build();
+                notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_FOREGROUND_SERVICE | Notification.FLAG_NO_CLEAR;
+                startForeground(startId, notification);
+            }
         }
 
         provider.startRecording();
