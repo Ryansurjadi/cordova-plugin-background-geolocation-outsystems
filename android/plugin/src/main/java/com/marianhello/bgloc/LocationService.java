@@ -246,6 +246,7 @@ public class LocationService extends Service {
             log.info("Build Version SDK INT", Build.VERSION.SDK_INT);
             log.info("Build Version Codes o", Build.VERSION_CODES.O);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                Context context = getApplicationContext();
                 String NOTIFICATION_CHANNEL_ID = context.getPackageName();
                 String channelName = "My Background Service";
                 NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
