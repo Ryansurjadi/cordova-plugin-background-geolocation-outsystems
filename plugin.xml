@@ -21,7 +21,7 @@
 
     <!-- android -->
     <platform name="android">
-        <preference name="GOOGLE_PLAY_SERVICES_VERSION" default="11+"/>
+        <preference name="GOOGLE_PLAY_SERVICES_VERSION" default="16+"/>
         <preference name="ANDROID_SUPPORT_LIBRARY_VERSION" default="23+"/>
         <preference name="ICON" default="@mipmap/ic_launcher" />
         <preference name="SMALL_ICON" default="@mipmap/ic_launcher" />
